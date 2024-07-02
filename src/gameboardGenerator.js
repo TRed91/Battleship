@@ -3,8 +3,10 @@ const Ship = require('./shipGeneraor');
 class Field
 {
     constructor(alpha, num){
-        this.name = [alpha ,num]
+        this.coords = [alpha ,num]
     }
+
+    isField = true;
 
     gotHit = false;
 
@@ -67,15 +69,31 @@ class Gameboard{
         return rows;
     }
 
-    #getField(num, alpha){
-        for (let field of this.board[num - 1]){
-            if (field.name[1] === alpha) return field;
-        }
+    placeShips(){
+        const ship2 = new Ship(2, [[1,"A"], [1, "B"]]);
+        this.board[0][0] = ship2;
+        this.board[0][1] = ship2;
     }
 
     receiveAttack(num, alpha){
-        const hitField = this.#getField(num, alpha);
-        hitField.receivedHit();
+        switch (alpha){
+            case "A": alpha = 0; break;
+            case "B": alpha = 1; break;
+            case "C": alpha = 2; break;
+            case "D": alpha = 3; break;
+            case "E": alpha = 4; break;
+            case "F": alpha = 5; break;
+            case "G": alpha = 6; break;
+            case "H": alpha = 7; break;
+            case "I": alpha = 8; break;
+            case "J": alpha = 9; break;
+        }
+        
+        const hitField = this.board[num - 1][alpha];
+        if (hitField.hasOwnProperty('isField'))
+            hitField.receivedHit();
+        else
+            hitField.hit();
     }
 }
 

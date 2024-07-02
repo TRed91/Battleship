@@ -1,7 +1,8 @@
 class Ship{
-    constructor(length){
+    constructor(length, coords){
         this.length = length;
-    }
+        this.coords = coords;
+        }
 
     hits = 0;
     sunk = false;
