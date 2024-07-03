@@ -26,41 +26,7 @@ class Gameboard{
 
             let cols = []; //alphas
             for (let j = 0; j < 10; j++){
-                let alpha = "";
-                switch (j){
-                    case 0:
-                        alpha = "A";
-                        break;
-                    case 1:
-                        alpha = "B";
-                        break;
-                    case 2:
-                        alpha = "C";
-                        break;
-                    case 3:
-                        alpha = "D";
-                        break;
-                    case 4:
-                        alpha = "E";
-                        break;
-                    case 5:
-                        alpha = "F";
-                        break;
-                    case 6:
-                        alpha = "G";
-                        break;
-                    case 7:
-                        alpha = "H";
-                        break;
-                    case 8:
-                        alpha = "I";
-                        break;
-                    case 9:
-                        alpha = "J";
-                        break;
-                }
-
-                cols.push(new Field(i + 1, alpha));
+                cols.push(new Field(i, j));
             }
 
             rows.push(cols);
@@ -69,27 +35,63 @@ class Gameboard{
         return rows;
     }
 
-    placeShips(){
-        const ship2 = new Ship(2, [[1,"A"], [1, "B"]]);
+    placeShips(val){
+        let placedShip = false;
+        while (!placedShip){
+            // generate Ship
+            const ship = new Ship(val, null);
+            
+            // determine angle of ship
+            let angle = "";
+            if (Math.floor(Math.random() * 2) === 0){
+                angle = 'vertical'
+            } else {
+                angle = 'horizontal'
+            }
+            // Get starting Coords
+            let numCoord = Math.floor(Math.random() * 10);
+            let alphaCoord = Math.floor(Math.random() * 10);
+            ship.coords = [[numCoord, alphaCoord]];
+            for (let i = 1; i < ship.length; i++){
+                if (angle === "horizontal")
+                    ship.coords.push([numCoord + i, alphaCoord]);
+                else 
+                    ship.coords.push([numCoord, alphaCoord + i])
+            }
+
+            // check for other ship
+            let collission = false;
+            ship.coords.forEach(coord => {
+                if(!this.board[coord[0]][coord[1]].hasOwnProperty('isField'))
+                    collission = true;
+            });
+
+            // check border
+            if (!collission){
+                if (angle === 'horizontal' && ship.coords[shipCoords.length - 1][0] <= 9) {
+                    ship.coords.forEach(coord => {
+                        this.board[coord[0]][coord[1]] = ship;
+                    })
+                    placedShip = true;
+                }
+                if (angle === 'vertical' && ship.coords[shipCoords.length - 1][1] <= 9) {
+                    ship.coords.forEach(coord => {
+                        this.board[coord[0]][coord[1]] = ship;
+                    })
+                    placedShip = true;
+                } 
+                
+            }
+        }
+    
+        const ship2 = new Ship(2, [[0,0], [0, 1]]);
+
         this.board[0][0] = ship2;
         this.board[0][1] = ship2;
     }
 
     receiveAttack(num, alpha){
-        switch (alpha){
-            case "A": alpha = 0; break;
-            case "B": alpha = 1; break;
-            case "C": alpha = 2; break;
-            case "D": alpha = 3; break;
-            case "E": alpha = 4; break;
-            case "F": alpha = 5; break;
-            case "G": alpha = 6; break;
-            case "H": alpha = 7; break;
-            case "I": alpha = 8; break;
-            case "J": alpha = 9; break;
-        }
-        
-        const hitField = this.board[num - 1][alpha];
+        const hitField = this.board[num][alpha];
         if (hitField.hasOwnProperty('isField'))
             hitField.receivedHit();
         else

@@ -3,7 +3,7 @@ const Gameboard = require('./gameboardGenerator');
 test('check gameboard field 1A', () => {
     const gameboard = new Gameboard();
     expect(gameboard.board[0][0]).toEqual({
-        coords: [1, "A"],
+        coords: [0, 0],
         gotHit: false,
         isField: true,
     })
@@ -12,7 +12,7 @@ test('check gameboard field 1A', () => {
 test('check gameboard field 10J', () => {
     const gameboard = new Gameboard();
     expect(gameboard.board[9][9]).toEqual({
-        coords: [10, "J"],
+        coords: [9, 9],
         gotHit: false,
         isField: true,
     })
@@ -26,9 +26,9 @@ test('receive hit at 3D', () => {
 
 test('attack field 4D', () => {
     const gameboard = new Gameboard();
-    gameboard.receiveAttack(4, "D")
+    gameboard.receiveAttack(3, 3)
     expect(gameboard.board[3][3]).toEqual({
-        coords: [4, "D"],
+        coords: [3, 3],
         gotHit: true,
         isField: true,
     })
@@ -38,13 +38,13 @@ test('check if ship is at 1A',() => {
     const gameboard = new Gameboard();
     gameboard.placeShips();
     expect(gameboard.board[0][0]).toEqual({
-        coords: [[1,"A"], [1, "B"]],
+        coords: [[0, 0], [0, 1]],
         length: 2,
         hits: 0,
         sunk: false,
     })
     expect(gameboard.board[0][1]).toEqual({
-        coords: [[1,"A"], [1, "B"]],
+        coords: [[0, 0], [0, 1]],
         length: 2,
         hits: 0,
         sunk: false,
@@ -62,6 +62,6 @@ test('hit ship 1A, then check value on both positions', () => {
 test('receive attack method on 1A', () => {
     const gameboard = new Gameboard();
     gameboard.placeShips();
-    gameboard.receiveAttack(1, "A");
+    gameboard.receiveAttack(0, 0);
     expect(gameboard.board[0][0].hits).toBe(1)
 });

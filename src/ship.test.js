@@ -1,17 +1,17 @@
 const Ship = require('./shipGeneraor');
 
 test('check ship', () => {
-    const ship = new Ship(2, [[1,"A"], [1, "B"]]);
+    const ship = new Ship(2, [[0, 0], [0, 1]]);
     expect(ship).toEqual({
         length: 2,
-        coords: [[1,"A"], [1, "B"]],
+        coords: [[0, 0], [0, 1]],
         hits: 0,
         sunk: false, 
     })
 });
 
 test('hit ship without sinking', () => {
-    const ship = new Ship(2, [[1,"A"], [1, "B"]]);
+    const ship = new Ship(2, [[0, 0], [0, 1]]);
     ship.hit();
     ship.isSunk();
     expect(ship.hits).toBe(1);
@@ -19,7 +19,7 @@ test('hit ship without sinking', () => {
 })
 
 test('hit and sink ship', () => {
-    const ship = new Ship(2, [[1,"A"], [1, "B"]]);
+    const ship = new Ship(2, [[0, 0], [0, 1]]);
     ship.hit()
     ship.hit()
     expect(ship.hits).toBe(2);
