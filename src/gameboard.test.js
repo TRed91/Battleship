@@ -65,3 +65,4 @@ test('receive attack method on 1A', () => {
     gameboard.receiveAttack(0, 0);
     expect(gameboard.board[0][0].hits).toBe(1)
 });
+

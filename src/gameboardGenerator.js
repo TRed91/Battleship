@@ -1,7 +1,6 @@
 const Ship = require('./shipGeneraor');
 
-class Field
-{
+class Field {
     constructor(alpha, num){
         this.coords = [alpha ,num]
     }
@@ -15,7 +14,7 @@ class Field
     }
 }
 
-class Gameboard{
+class Gameboard {
     constructor(){
         this.board = Gameboard.generateBoard();
     }
@@ -36,6 +35,11 @@ class Gameboard{
     }
 
     placeShips(val){
+        const ship2 = new Ship(2, [[0,0], [0, 1]]);
+
+        this.board[0][0] = ship2;
+        this.board[0][1] = ship2;
+
         let placedShip = false;
         while (!placedShip){
             // generate Ship
@@ -59,22 +63,26 @@ class Gameboard{
                     ship.coords.push([numCoord, alphaCoord + i])
             }
 
-            // check for other ship
+            // check for collission with border or other ship
             let collission = false;
             ship.coords.forEach(coord => {
-                if(!this.board[coord[0]][coord[1]].hasOwnProperty('isField'))
-                    collission = true;
+                if (coord[0] <= 9 && coord[1] <= 9) {
+                    if(!this.board[coord[0]][coord[1]].hasOwnProperty('isField'))
+                        collission = true;
+                } else {
+                    collission =  true;
+                }
             });
 
-            // check border
+            // place ship
             if (!collission){
-                if (angle === 'horizontal' && ship.coords[shipCoords.length - 1][0] <= 9) {
+                if (angle === 'horizontal') {
                     ship.coords.forEach(coord => {
                         this.board[coord[0]][coord[1]] = ship;
                     })
                     placedShip = true;
                 }
-                if (angle === 'vertical' && ship.coords[shipCoords.length - 1][1] <= 9) {
+                if (angle === 'vertical') {
                     ship.coords.forEach(coord => {
                         this.board[coord[0]][coord[1]] = ship;
                     })
@@ -83,11 +91,6 @@ class Gameboard{
                 
             }
         }
-    
-        const ship2 = new Ship(2, [[0,0], [0, 1]]);
-
-        this.board[0][0] = ship2;
-        this.board[0][1] = ship2;
     }
 
     receiveAttack(num, alpha){
