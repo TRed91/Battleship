@@ -1,4 +1,27 @@
 body {
     display: flex;
-    
+    flex-direction: column;
+    gap: 20px;
+}
+
+.game-field {
+    border: 2px solid black;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+}
+
+.field {
+    height: 20px;
+    width: 20px;
+    border: 1px solid black;
+}
+
+.board {
+    display: flex;
+    flex-direction: column;
+}
+
+.board > div {
+    display: flex;
 }
