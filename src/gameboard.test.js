@@ -66,3 +66,17 @@ test('receive attack method on 1A', () => {
     expect(gameboard.board[0][0].hits).toBe(1)
 });
 
+test('game over when all ships are sunk', () => {
+    const gameboard = new Gameboard();
+    gameboard.placeShips(3);
+    gameboard.placeShips(2);
+    gameboard.placeShips(4);
+    gameboard.placeShips(5);
+    gameboard.board.forEach(row => {
+        row.forEach(field => {
+            if(!field.hasOwnProperty('isField'))
+                field.sunk = true;
+        })
+    })
+    expect(gameboard.receiveAttack(1, 3)).toBe("Game Over")
+})

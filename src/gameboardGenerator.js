@@ -88,7 +88,6 @@ class Gameboard {
                     })
                     placedShip = true;
                 } 
-                
             }
         }
     }
@@ -99,7 +98,30 @@ class Gameboard {
             hitField.receivedHit();
         else
             hitField.hit();
+
+        // return array of all fields with ship on it
+        const shipsOnBoard = [];
+        for (const row of this.board){
+            for (const field of row) {
+                if (!field.hasOwnProperty('isField')) {
+                    shipsOnBoard.push(field);
+                }
+            }
+        }
+
+        // return any ships that are not sunk
+        const remainingShips = shipsOnBoard.filter(ship => {
+            return !ship.sunk;
+        })
+        
+        // check if ships remain
+        if (remainingShips.length === 0) 
+            return "Game Over";
     }
 }
+
+const gBoard = new Gameboard();
+gBoard.placeShips(3);
+gBoard.receiveAttack(2, 2);
 
 module.exports = Gameboard;
