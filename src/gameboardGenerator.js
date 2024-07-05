@@ -94,20 +94,16 @@ class Gameboard {
 
     receiveAttack(num, alpha){
         const hitField = this.board[num][alpha];
-        if (hitField.hasOwnProperty('isField'))
+        if (hitField.hasOwnProperty('isField')){
             hitField.receivedHit();
-        else
+        }
+        else{
             hitField.hit();
+            hitField.isSunk();
+        }
 
         // return array of all fields with ship on it
-        const shipsOnBoard = [];
-        for (const row of this.board){
-            for (const field of row) {
-                if (!field.hasOwnProperty('isField')) {
-                    shipsOnBoard.push(field);
-                }
-            }
-        }
+        const shipsOnBoard = this.getShipList();
 
         // return any ships that are not sunk
         const remainingShips = shipsOnBoard.filter(ship => {
@@ -117,6 +113,18 @@ class Gameboard {
         // check if ships remain
         if (remainingShips.length === 0) 
             return "Game Over";
+    }
+
+    getShipList() {
+        const shipList = [];
+        for (const row of this.board){
+            for (const field of row) {
+                if (!field.hasOwnProperty('isField')) {
+                    shipList.push(field);
+                }
+            }
+        }
+        return shipList;
     }
 }
 

@@ -11,11 +11,19 @@ body {
     padding: 10px;
 }
 
-.field {
+.field, .ship {
     height: 20px;
     width: 20px;
     border: 1px solid black;
 }
+
+.p1-ship {
+    background-color: aqua;
+}
+
+/* .p2-ship {
+    background-color: red;
+} */
 
 .board {
     display: flex;
@@ -24,4 +32,12 @@ body {
 
 .board > div {
     display: flex;
+}
+
+div [hit = "true"] {
+    background-color: brown;
+}
+
+div [class~="ship"][hit = "true"]{
+    background-color: black;
 }
