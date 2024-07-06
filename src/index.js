@@ -4,6 +4,8 @@ const Player = require('./playerGenerator');
 let playerOne = new Player();
 let playerTwo = new Player();
 
+let muteListeners = false;
+
 const DOMbody = document.querySelector('body');
 
 const gameInterface = document.createElement('div');
@@ -45,16 +47,26 @@ function initializePlayers(){
     //initalize Player 1
     playerOne = new Player();
     playerOne.gameboard.placeShips(2);
+    playerOne.gameboard.placeShips(2);
+    playerOne.gameboard.placeShips(2);
+    playerOne.gameboard.placeShips(2);
     playerOne.gameboard.placeShips(3);
     playerOne.gameboard.placeShips(3);
+    playerOne.gameboard.placeShips(3);
+    playerOne.gameboard.placeShips(4);
     playerOne.gameboard.placeShips(4);
     playerOne.gameboard.placeShips(5);
 
     //initalize Player 2
     playerTwo = new Player();
     playerTwo.gameboard.placeShips(2);
+    playerTwo.gameboard.placeShips(2);
+    playerTwo.gameboard.placeShips(2);
+    playerTwo.gameboard.placeShips(2);
     playerTwo.gameboard.placeShips(3);
     playerTwo.gameboard.placeShips(3);
+    playerTwo.gameboard.placeShips(3);
+    playerTwo.gameboard.placeShips(4);
     playerTwo.gameboard.placeShips(4);
     playerTwo.gameboard.placeShips(5);
 }
@@ -78,16 +90,18 @@ function newGame() {
     const boardListeners = document.querySelectorAll('.p2-field');
     boardListeners.forEach(field => {
         field.addEventListener('click', () => {
-            const classArr = field.getAttribute('class').split(" ");
-            const coord = classArr[2].split("");
-            const num = parseInt(coord[coord.length-2]);
-            const alpha = parseInt(coord[coord.length-1]);
-            const attack = playerTwo.gameboard.receiveAttack(num, alpha);
-            field.setAttribute('hit', 'true');
-            if (attack === 'Game Over') 
-                showGameover('Player One');
-            else
-                playerTwoTurn();
+            if (!muteListeners){
+                const classArr = field.getAttribute('class').split(" ");
+                const coord = classArr[2].split("");
+                const num = parseInt(coord[coord.length-2]);
+                const alpha = parseInt(coord[coord.length-1]);
+                const attack = playerTwo.gameboard.receiveAttack(num, alpha);
+                field.setAttribute('hit', 'true');
+                if (attack === 'Game Over') 
+                    showGameover('Player One');
+                else
+                    playerTwoTurn();
+            }
         })
     })
 }
@@ -97,7 +111,8 @@ function playerTwoTurn() {
     let p2num = 0;
     let p2alpha = 0;
     let attackedField;
-    
+
+    // Repeate until field is selected that isn't already hit
     while (hitField){
         p2num = Math.floor(Math.random() * 10);
         p2alpha = Math.floor(Math.random() * 10);
@@ -157,4 +172,38 @@ function drawBoards() {
         p1Board.appendChild(p1row);
         p2Board.appendChild(p2row);
     }
+}
+
+function showGameover(winner){
+    // disable field inputs
+    muteListeners = true;
+
+    const winnerMessageBox = document.createElement('div');
+    winnerMessageBox.className = 'winner-box';
+    const winnerMessageText = document.createElement('h3');
+    winnerMessageText.className = 'winner-text'
+    const winnerMessageButton = document.createElement('button');
+    winnerMessageButton.className = 'winner-button';
+
+    winnerMessageText.innerHTML = `Game Over</br>${winner} won the game!`;
+    winnerMessageButton.innerHTML = 'New Game';
+    winnerMessageButton.className = 'winner-btn'
+
+    winnerMessageBox.appendChild(winnerMessageText);
+    winnerMessageBox.appendChild(winnerMessageButton);
+    
+    DOMbody.appendChild(winnerMessageBox);
+
+    winnerMessageButton.addEventListener('click', () => {
+        
+        startGameBtn.disabled = false;
+        newBoardBtn.disabled = false;
+
+        initializePlayers();
+        drawBoards();
+
+        DOMbody.removeChild(DOMbody.lastChild);
+
+        muteListeners = false;
+    })
 }

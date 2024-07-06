@@ -35,11 +35,6 @@ class Gameboard {
     }
 
     placeShips(val){
-        const ship2 = new Ship(2, [[0,0], [0, 1]]);
-
-        this.board[0][0] = ship2;
-        this.board[0][1] = ship2;
-
         let placedShip = false;
         while (!placedShip){
             // generate Ship
