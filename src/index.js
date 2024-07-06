@@ -66,7 +66,7 @@ function getShipCoords(player){
     }, []);
     const newCoordList = Array.from(new Set(shipsCoords.map(JSON.stringify)), JSON.parse);
     const stringCoords = newCoordList.map(arr => {
-        return `${arr[0]}, ${arr[1]}`;
+        return `${arr[0]}${arr[1]}`;
     })
     return stringCoords;
 }
@@ -79,9 +79,9 @@ function newGame() {
     boardListeners.forEach(field => {
         field.addEventListener('click', () => {
             const classArr = field.getAttribute('class').split(" ");
-            const coord = classArr[2].split(",");
-            const num = parseInt(coord[0]);
-            const alpha = parseInt(coord[1]);
+            const coord = classArr[2].split("");
+            const num = parseInt(coord[coord.length-2]);
+            const alpha = parseInt(coord[coord.length-1]);
             const attack = playerTwo.gameboard.receiveAttack(num, alpha);
             field.setAttribute('hit', 'true');
             if (attack === 'Game Over') 
@@ -93,10 +93,20 @@ function newGame() {
 }
 
 function playerTwoTurn() {
-    const p2num = Math.floor(Math.random() * 10);
-    const p2alpha = Math.floor(Math.random() * 10);
-    const coord = `${p2num}, ${p2alpha}`;
-    const attackedField = document.querySelector(".p1-field." + coord);
+    let hitField = true
+    let p2num = 0;
+    let p2alpha = 0;
+    let attackedField;
+    
+    while (hitField){
+        p2num = Math.floor(Math.random() * 10);
+        p2alpha = Math.floor(Math.random() * 10);
+        const coord = `c-${p2num}${p2alpha}`;
+        attackedField = document.querySelector(".p1-field." + coord);
+        if (attackedField.getAttribute('hit') === 'false')
+            hitField = false;
+    }
+
     attackedField.setAttribute('hit', 'true');
     const p2attack = playerOne.gameboard.receiveAttack(p2num, p2alpha);
     if (p2attack === 'Game Over')
@@ -118,15 +128,15 @@ function drawBoards() {
         const p1row = document.createElement('div')
         const p2row = document.createElement('div')
         for (let j = 0; j < 10; j++) {
-            const compareCoords = `${i}, ${j}`
+            const compareCoords = `${i}${j}`
 
             // Draw Player One Field
             const newP1Field = document.createElement('div');
             
             if (getShipCoords(playerOne).includes(compareCoords))
-                newP1Field.className = `ship p1-ship ${i},${j} p1-field`;
+                newP1Field.className = `ship p1-ship c-${i}${j} p1-field`;
             else
-                newP1Field.className = `field p1-field ${i},${j}`;
+                newP1Field.className = `field p1-field c-${i}${j}`;
 
             newP1Field.setAttribute('hit', 'false');
             p1row.appendChild(newP1Field);
@@ -136,9 +146,9 @@ function drawBoards() {
             const newP2Field = document.createElement('div');
 
             if (getShipCoords(playerTwo).includes(compareCoords))
-                newP2Field.className = `ship p2-ship ${i},${j} p2-field`;
+                newP2Field.className = `ship p2-ship c-${i}${j} p2-field`;
             else
-                newP2Field.className = `field p2-field ${i},${j}`;
+                newP2Field.className = `field p2-field c-${i}${j}`;
 
             newP2Field.setAttribute('hit', 'false');
             p2row.appendChild(newP2Field);
